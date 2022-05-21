@@ -24,7 +24,6 @@ class TvShowFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTvShowsBinding.bind(view)
 
-
     }
 
     override fun onDestroyView() {
