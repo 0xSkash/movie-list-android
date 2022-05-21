@@ -25,10 +25,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "API_KEY", getValueForKey("API_KEY"))
+            buildConfigField("String", "BASE_URL", "\"http://192.168.178.156:80\"")
         }
         debug {
             minifyEnabled false
             buildConfigField("String", "API_KEY", getValueForKey("API_KEY"))
+            buildConfigField("String", "BASE_URL", "\"http://192.168.178.156:80\"")
         }
     }
 

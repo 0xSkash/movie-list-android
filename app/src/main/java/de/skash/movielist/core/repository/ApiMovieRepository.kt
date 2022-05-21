@@ -1,4 +1,9 @@
 package de.skash.movielist.core.repository
 
-class ApiMovieRepository: MovieRepository {
+import de.skash.movielist.core.network.api.MovieApi
+import javax.inject.Inject
+
+class ApiMovieRepository @Inject constructor(
+    private val movieApi: MovieApi
+) : MovieRepository {
 }
