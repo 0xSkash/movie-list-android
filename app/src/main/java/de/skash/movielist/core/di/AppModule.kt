@@ -6,8 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import de.skash.movielist.BuildConfig
 import de.skash.movielist.core.network.api.MovieApi
+import de.skash.movielist.core.network.api.PeopleApi
 import de.skash.movielist.core.repository.ApiMovieRepository
+import de.skash.movielist.core.repository.ApiPeopleRepository
 import de.skash.movielist.core.repository.MovieRepository
+import de.skash.movielist.core.repository.PeopleRepository
 import de.skash.movielist.core.util.Constants
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.HttpUrl
@@ -37,9 +40,22 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun providePeopleRepository(peopleApi: PeopleApi): PeopleRepository {
+        return ApiPeopleRepository(peopleApi)
+    }
+
+    @Singleton
+    @Provides
     fun provideMovieApi(): MovieApi {
         return retrofit
             .create(MovieApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun providePeopleApi(): PeopleApi {
+        return retrofit
+            .create(PeopleApi::class.java)
     }
 
     private fun createHttpClient(): OkHttpClient {
