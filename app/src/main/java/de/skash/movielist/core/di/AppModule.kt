@@ -8,6 +8,7 @@ import de.skash.movielist.BuildConfig
 import de.skash.movielist.core.network.api.MovieApi
 import de.skash.movielist.core.repository.ApiMovieRepository
 import de.skash.movielist.core.repository.MovieRepository
+import de.skash.movielist.core.util.Constants
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -52,7 +53,7 @@ object AppModule {
                 val originalHttpUrl: HttpUrl = original.url
 
                 val url = originalHttpUrl.newBuilder()
-                    .addQueryParameter("api_key", BuildConfig.API_KEY)
+                    .addQueryParameter(Constants.API_KEY_QUERY_PARAMETER_NAME, BuildConfig.API_KEY)
                     .build()
                 val requestBuilder: Request.Builder = original.newBuilder()
                     .url(url)
