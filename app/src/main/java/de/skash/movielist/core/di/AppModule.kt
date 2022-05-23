@@ -9,7 +9,9 @@ import de.skash.movielist.core.network.api.MovieApi
 import de.skash.movielist.core.repository.ApiMovieRepository
 import de.skash.movielist.core.repository.MovieRepository
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,6 +47,19 @@ object AppModule {
                 HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY)
             )
+            .addInterceptor { chain ->
+                val original: Request = chain.request()
+                val originalHttpUrl: HttpUrl = original.url
+
+                val url = originalHttpUrl.newBuilder()
+                    .addQueryParameter("api_key", BuildConfig.API_KEY)
+                    .build()
+                val requestBuilder: Request.Builder = original.newBuilder()
+                    .url(url)
+
+                val request: Request = requestBuilder.build()
+                chain.proceed(request)
+            }
             .build()
     }
 }

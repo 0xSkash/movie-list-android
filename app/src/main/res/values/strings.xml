@@ -3,4 +3,9 @@
     <string name="title_movies">Movies</string>
     <string name="title_tv_shows">TV Shows</string>
     <string name="title_people">People</string>
+
+    <!-- Movies -->
+    <string name="title_upcoming_movies">Upcoming</string>
+    <string name="title_trending_movies">Trending</string>
+    <string name="title_popular_movies">Popular</string>
 </resources>
