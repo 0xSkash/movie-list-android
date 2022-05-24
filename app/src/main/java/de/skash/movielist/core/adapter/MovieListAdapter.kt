@@ -9,8 +9,11 @@ import com.bumptech.glide.Glide
 import de.skash.movielist.R
 import de.skash.movielist.core.model.Movie
 import de.skash.movielist.databinding.ListItemMovieBinding
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 
-class MovieListAdapter : PagingDataAdapter<Movie, MovieViewHolder>(MovieDiffUtil()) {
+class MovieListAdapter(private val onMovieClicked: (Movie) -> Unit) :
+    PagingDataAdapter<Movie, MovieViewHolder>(MovieDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -21,11 +24,14 @@ class MovieListAdapter : PagingDataAdapter<Movie, MovieViewHolder>(MovieDiffUtil
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = getItem(position) ?: return
         holder.bind(movie)
+        holder.binding.cardView.setOnClickListener {
+            onMovieClicked(movie)
+        }
     }
 }
 
 class MovieViewHolder(
-    private val binding: ListItemMovieBinding
+    val binding: ListItemMovieBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(movie: Movie) {

@@ -9,7 +9,11 @@
         android:id="@+id/navigation_movies"
         android:name="de.skash.movielist.feature.movie.MovieFragment"
         android:label="@string/title_movies"
-        tools:layout="@layout/fragment_movies" />
+        tools:layout="@layout/fragment_movies" >
+        <action
+            android:id="@+id/action_navigation_movies_to_detailedMovieFragment"
+            app:destination="@id/navigation_detailed_movie" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_people"
@@ -22,4 +26,13 @@
         android:name="de.skash.movielist.feature.tv.TvShowFragment"
         android:label="@string/title_tv_shows"
         tools:layout="@layout/fragment_tv_shows" />
+    <fragment
+        android:id="@+id/navigation_detailed_movie"
+        android:name="de.skash.movielist.feature.movie.detail.DetailedMovieFragment"
+        android:label="DetailedMovieFragment" >
+        <argument
+            android:name="movieId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

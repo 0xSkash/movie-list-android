@@ -10,6 +10,7 @@ import androidx.paging.rxjava3.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.skash.movielist.core.model.Movie
 import de.skash.movielist.core.repository.MovieRepository
+import de.skash.movielist.core.util.SingleLiveEvent
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -29,6 +30,11 @@ class UpcomingMoviesViewModel @Inject constructor(
     private val _moviePagingDataLiveData = MutableLiveData<PagingData<Movie>>()
     val moviePagingDataLiveData: LiveData<PagingData<Movie>> get() = _moviePagingDataLiveData
 
+    private val movieClickSubject: PublishSubject<Int> = PublishSubject.create()
+    private val movieClickStream: Observable<Int> = movieClickSubject.hide()
+    private val _movieClickLiveData = SingleLiveEvent<Int>()
+    val movieClickLiveData: LiveData<Int> get() = _movieClickLiveData
+
     private val subscriptions = CompositeDisposable()
 
     init {
@@ -36,8 +42,14 @@ class UpcomingMoviesViewModel @Inject constructor(
             .subscribe(_moviePagingDataLiveData::postValue)
             .addTo(subscriptions)
 
+        movieClickStream
+            .subscribe(_movieClickLiveData::postValue)
+            .addTo(subscriptions)
+
         retrievePopularMovies()
     }
+
+    fun onMovieClicked(movieId: Int) = movieClickSubject.onNext(movieId)
 
     private fun retrievePopularMovies() {
         movieRepository.fetchMoviesForFilterType(

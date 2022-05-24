@@ -4,6 +4,7 @@ import de.skash.movielist.core.network.model.ApiDetailedMovie
 import de.skash.movielist.core.network.model.ApiMovieList
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieApi {
@@ -27,7 +28,7 @@ interface MovieApi {
 
     @GET("movie/{movieId}")
     fun getMovieDetailed(
-        @Query("movieId") movieId: Int
+        @Path("movieId") movieId: Int
     ): Single<ApiDetailedMovie>
 
 

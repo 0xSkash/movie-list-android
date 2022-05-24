@@ -9,6 +9,9 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import de.skash.movielist.core.adapter.MovieListAdapter
 import de.skash.movielist.databinding.FragmentPopularMoviesBinding
+import de.skash.movielist.feature.movie.MovieFragment
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 
 @AndroidEntryPoint
 class PopularMoviesFragment : Fragment() {
@@ -16,8 +19,12 @@ class PopularMoviesFragment : Fragment() {
     private var _binding: FragmentPopularMoviesBinding? = null
     private val binding: FragmentPopularMoviesBinding get() = _binding!!
 
-    private val movieListAdapter = MovieListAdapter()
+    private val movieListAdapter = MovieListAdapter(onMovieClicked = { movie ->
+        viewModel.onMovieClicked(movie.id)
+    })
     private val viewModel: PopularMoviesViewModel by viewModels()
+
+    private val subscriptions = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +42,10 @@ class PopularMoviesFragment : Fragment() {
 
         viewModel.moviePagingDataLiveData.observe(viewLifecycleOwner) { pagingData ->
             movieListAdapter.submitData(lifecycle, pagingData)
+        }
+
+        viewModel.movieClickLiveData.observe(viewLifecycleOwner) { movieId ->
+            (parentFragment as? MovieFragment)?.onMovieClicked(movieId)
         }
     }
 

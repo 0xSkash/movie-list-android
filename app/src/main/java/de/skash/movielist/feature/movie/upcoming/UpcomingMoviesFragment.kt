@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import de.skash.movielist.core.adapter.MovieListAdapter
 import de.skash.movielist.databinding.FragmentUpcomingMoviesBinding
+import de.skash.movielist.feature.movie.MovieFragment
 
 @AndroidEntryPoint
 class UpcomingMoviesFragment : Fragment() {
@@ -16,7 +17,9 @@ class UpcomingMoviesFragment : Fragment() {
     private var _binding: FragmentUpcomingMoviesBinding? = null
     private val binding: FragmentUpcomingMoviesBinding get() = _binding!!
 
-    private val movieListAdapter = MovieListAdapter()
+    private val movieListAdapter = MovieListAdapter(onMovieClicked = { movie ->
+        viewModel.onMovieClicked(movie.id)
+    })
     private val viewModel: UpcomingMoviesViewModel by viewModels()
 
     override fun onCreateView(
@@ -35,6 +38,10 @@ class UpcomingMoviesFragment : Fragment() {
 
         viewModel.moviePagingDataLiveData.observe(viewLifecycleOwner) { pagingData ->
             movieListAdapter.submitData(lifecycle, pagingData)
+        }
+
+        viewModel.movieClickLiveData.observe(viewLifecycleOwner) { movieId ->
+            (parentFragment as? MovieFragment)?.onMovieClicked(movieId)
         }
     }
 
