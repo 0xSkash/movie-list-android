@@ -11,6 +11,6 @@ data class Person(
     constructor(apiModel: ApiPerson): this(
         id = apiModel.id,
         name = apiModel.name,
-        imageURL = "${BuildConfig.BASE_URL}${apiModel.profile_path}"
+        imageURL = "${BuildConfig.IMAGE_BASE_URL}${apiModel.profile_path}"
     )
 }
