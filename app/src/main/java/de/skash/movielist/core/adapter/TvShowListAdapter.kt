@@ -10,7 +10,8 @@ import de.skash.movielist.R
 import de.skash.movielist.core.model.TvShow
 import de.skash.movielist.databinding.ListItemTvShowBinding
 
-class TvShowListAdapter : PagingDataAdapter<TvShow, TvShowViewHolder>(TvShowDiffUtil()) {
+class TvShowListAdapter(private val onTvShowClicked: (TvShow) -> Unit) :
+    PagingDataAdapter<TvShow, TvShowViewHolder>(TvShowDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -21,11 +22,15 @@ class TvShowListAdapter : PagingDataAdapter<TvShow, TvShowViewHolder>(TvShowDiff
     override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
         val tvShow = getItem(position) ?: return
         holder.bind(tvShow)
+
+        holder.binding.cardView.setOnClickListener {
+            onTvShowClicked(tvShow)
+        }
     }
 }
 
 class TvShowViewHolder(
-    private val binding: ListItemTvShowBinding
+    val binding: ListItemTvShowBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(tvShow: TvShow) {

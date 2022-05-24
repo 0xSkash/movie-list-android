@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.skash.movielist.core.adapter.TvShowListAdapter
 import de.skash.movielist.databinding.FragmentTvShowsBinding
@@ -17,7 +18,9 @@ class TvShowFragment : Fragment() {
     private val binding: FragmentTvShowsBinding get() = _binding!!
 
     private val viewModel: TvShowViewModel by viewModels()
-    private val tvShowListAdapter = TvShowListAdapter()
+    private val tvShowListAdapter = TvShowListAdapter(onTvShowClicked = { tvShow ->
+        viewModel.onTvShowClicked(tvShow.id)
+    })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +38,11 @@ class TvShowFragment : Fragment() {
 
         viewModel.tvShowsPagingDataLiveData.observe(viewLifecycleOwner) { pagingData ->
             tvShowListAdapter.submitData(lifecycle, pagingData)
+        }
+
+        viewModel.tvShowClickLiveData.observe(viewLifecycleOwner) { tvShowId ->
+            val navAction = TvShowFragmentDirections.actionNavigationTvShowsToNavigationDetailedTvShow(tvShowId)
+            findNavController().navigate(navAction)
         }
     }
 

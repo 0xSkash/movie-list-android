@@ -29,7 +29,11 @@
         android:id="@+id/navigation_tv_shows"
         android:name="de.skash.movielist.feature.tv.TvShowFragment"
         android:label="@string/title_tv_shows"
-        tools:layout="@layout/fragment_tv_shows" />
+        tools:layout="@layout/fragment_tv_shows" >
+        <action
+            android:id="@+id/action_navigation_tv_shows_to_navigation_detailed_tv_show"
+            app:destination="@id/navigation_detailed_tv_show" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_detailed_movie"
         android:name="de.skash.movielist.feature.movie.detail.DetailedMovieFragment"
@@ -47,5 +51,13 @@
             android:name="personId"
             app:argType="integer"
             android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_detailed_tv_show"
+        android:name="de.skash.movielist.feature.tv.detail.DetailedTvShowFragment"
+        android:label="DetailedTvShowFragment" >
+        <argument
+            android:name="tvShowId"
+            app:argType="integer" />
     </fragment>
 </navigation>

@@ -10,6 +10,7 @@ import androidx.paging.rxjava3.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.skash.movielist.core.model.TvShow
 import de.skash.movielist.core.repository.TvShowRepository
+import de.skash.movielist.core.util.SingleLiveEvent
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -31,6 +32,11 @@ class TvShowViewModel @Inject constructor(
     private val _tvShowsPagingDataLiveData = MutableLiveData<PagingData<TvShow>>()
     val tvShowsPagingDataLiveData: LiveData<PagingData<TvShow>> get() = _tvShowsPagingDataLiveData
 
+    private val tvShowClickSubject: PublishSubject<Int> = PublishSubject.create()
+    private val tvShowClickStream: Observable<Int> = tvShowClickSubject.hide()
+    private val _tvShowClickLiveData = SingleLiveEvent<Int>()
+    val tvShowClickLiveData: LiveData<Int> get() = _tvShowClickLiveData
+
     private val subscriptions = CompositeDisposable()
 
     init {
@@ -38,8 +44,14 @@ class TvShowViewModel @Inject constructor(
             .subscribe(_tvShowsPagingDataLiveData::postValue)
             .addTo(subscriptions)
 
+        tvShowClickStream
+            .subscribe(_tvShowClickLiveData::postValue)
+            .addTo(subscriptions)
+
         fetchPopularTvShows()
     }
+
+    fun onTvShowClicked(tvShowId: Int) = tvShowClickSubject.onNext(tvShowId)
 
     private fun fetchPopularTvShows() {
         tvShowRepository.fetchPopularTvShows()
