@@ -8,4 +8,11 @@
     <string name="title_upcoming_movies">Upcoming</string>
     <string name="title_trending_movies">Trending</string>
     <string name="title_popular_movies">Popular</string>
+
+    <!-- Error Types -->
+    <string name="error_alert_title">Error</string>
+    <string name="error_type_no_internet">Please make sure you are connected to the internet!</string>
+    <string name="error_type_movie_not_found">Failed to find the movie you selected. TODO</string>
+    <string name="error_type_failed_to_load_movie_list">Failed to load Movie List</string>
+    <string name="error_alert_ok_button_text">OK</string>
 </resources>

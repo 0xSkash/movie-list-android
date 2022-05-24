@@ -1,14 +1,18 @@
 package de.skash.movielist.feature.movie.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 import de.skash.movielist.core.model.DetailedMovie
+import de.skash.movielist.core.util.Result
+import de.skash.movielist.core.util.showErrorDialog
 import de.skash.movielist.databinding.FragmentDetailedMovieBinding
 
 @AndroidEntryPoint
@@ -35,8 +39,14 @@ class DetailedMovieFragment : Fragment() {
         _binding = FragmentDetailedMovieBinding.bind(view)
         viewModel.fetchDetailedMovieForId(args.movieId)
 
-        viewModel.movieLivedata.observe(viewLifecycleOwner) { movie ->
-            setupUI(movie)
+        viewModel.movieLivedata.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Error -> requireContext().showErrorDialog(result.errorType, onDismiss = {
+                    findNavController().navigateUp()
+                })
+                is Result.Loading -> Log.d(javaClass.name, "Loading Detailed Movie...")
+                is Result.Success -> setupUI(result.value)
+            }
         }
     }
 

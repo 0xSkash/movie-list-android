@@ -2,6 +2,7 @@ package de.skash.movielist.core.network.api
 
 import de.skash.movielist.core.network.model.ApiDetailedMovie
 import de.skash.movielist.core.network.model.ApiMovieList
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -29,7 +30,7 @@ interface MovieApi {
     @GET("movie/{movieId}")
     fun getMovieDetailed(
         @Path("movieId") movieId: Int
-    ): Single<ApiDetailedMovie>
+    ): Observable<ApiDetailedMovie>
 
 
 }

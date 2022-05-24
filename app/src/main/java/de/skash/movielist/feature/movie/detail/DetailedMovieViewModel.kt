@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.skash.movielist.core.model.DetailedMovie
 import de.skash.movielist.core.repository.MovieRepository
+import de.skash.movielist.core.util.Result
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -19,10 +20,10 @@ class DetailedMovieViewModel @Inject constructor(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
 
-    private val movieSubject: PublishSubject<DetailedMovie> = PublishSubject.create()
-    private val movieStream: Observable<DetailedMovie> = movieSubject.hide()
-    private val _movieLivedata = MutableLiveData<DetailedMovie>()
-    val movieLivedata: LiveData<DetailedMovie> get() = _movieLivedata
+    private val movieSubject: PublishSubject<Result<DetailedMovie>> = PublishSubject.create()
+    private val movieStream: Observable<Result<DetailedMovie>> = movieSubject.hide()
+    private val _movieLivedata = MutableLiveData<Result<DetailedMovie>>()
+    val movieLivedata: LiveData<Result<DetailedMovie>> get() = _movieLivedata
 
     private val subscriptions = CompositeDisposable()
 
@@ -35,11 +36,10 @@ class DetailedMovieViewModel @Inject constructor(
     fun fetchDetailedMovieForId(id: Int) {
         movieRepository.fetchDetailedMovieForId(id)
             .subscribeBy(
-                onSuccess = {
+                onNext = {
                     movieSubject.onNext(it)
                 },
                 onError = {
-                    //TODO: Error Handling
                     Log.d(javaClass.name, "Failed to fetch detailed movie for id: $id :: ", it)
                 }
             ).addTo(subscriptions)
