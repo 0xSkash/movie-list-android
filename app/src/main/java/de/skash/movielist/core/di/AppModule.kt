@@ -38,8 +38,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providePeopleRepository(peopleApi: PeopleApi): PeopleRepository {
-        return ApiPeopleRepository(peopleApi)
+    fun providePeopleRepository(peopleApi: PeopleApi): PersonRepository {
+        return ApiPersonRepository(peopleApi)
     }
 
     @Singleton

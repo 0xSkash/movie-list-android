@@ -9,7 +9,8 @@ import androidx.paging.PagingData
 import androidx.paging.rxjava3.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.skash.movielist.core.model.Person
-import de.skash.movielist.core.repository.PeopleRepository
+import de.skash.movielist.core.repository.PersonRepository
+import de.skash.movielist.core.util.SingleLiveEvent
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
@@ -21,7 +22,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PeopleViewModel @Inject constructor(
-    private val peopleRepository: PeopleRepository
+    private val peopleRepository: PersonRepository
 ) : ViewModel() {
 
     private val peoplePagingDataSubject: PublishSubject<PagingData<Person>> =
@@ -31,6 +32,11 @@ class PeopleViewModel @Inject constructor(
     private val _peoplePagingDataLiveData = MutableLiveData<PagingData<Person>>()
     val peoplePagingDataLiveData: LiveData<PagingData<Person>> get() = _peoplePagingDataLiveData
 
+    private val personClickSubject: PublishSubject<Int> = PublishSubject.create()
+    private val personClickStream: Observable<Int> = personClickSubject.hide()
+    private val _personClickLiveData = SingleLiveEvent<Int>()
+    val personClickLiveData: LiveData<Int> get() = _personClickLiveData
+
     private val subscriptions = CompositeDisposable()
 
     init {
@@ -38,8 +44,14 @@ class PeopleViewModel @Inject constructor(
             .subscribe(_peoplePagingDataLiveData::postValue)
             .addTo(subscriptions)
 
+        personClickStream
+            .subscribe(_personClickLiveData::postValue)
+            .addTo(subscriptions)
+
         fetchPopularPeople()
     }
+
+    fun onPersonClicked(personId: Int) = personClickSubject.onNext(personId)
 
     private fun fetchPopularPeople() {
         peopleRepository.fetchPopularPeople()

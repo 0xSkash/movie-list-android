@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.skash.movielist.core.adapter.PersonListAdapter
 import de.skash.movielist.databinding.FragmentPeopleBinding
@@ -16,7 +17,9 @@ class PeopleFragment : Fragment() {
     private var _binding: FragmentPeopleBinding? = null
     private val binding: FragmentPeopleBinding get() = _binding!!
 
-    private val peopleListAdapter = PersonListAdapter()
+    private val peopleListAdapter = PersonListAdapter(onPersonClicked = { person ->
+        viewModel.onPersonClicked(person.id)
+    })
     private val viewModel: PeopleViewModel by viewModels()
 
     override fun onCreateView(
@@ -35,6 +38,11 @@ class PeopleFragment : Fragment() {
 
         viewModel.peoplePagingDataLiveData.observe(viewLifecycleOwner) { pagingData ->
             peopleListAdapter.submitData(lifecycle, pagingData)
+        }
+
+        viewModel.personClickLiveData.observe(viewLifecycleOwner) { personId ->
+            val navAction = PeopleFragmentDirections.actionNavigationPeopleToDetailedPersonFragment(personId)
+            findNavController().navigate(navAction)
         }
     }
 

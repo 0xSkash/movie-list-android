@@ -7,10 +7,12 @@ import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import de.skash.movielist.R
+import de.skash.movielist.core.model.Movie
 import de.skash.movielist.core.model.Person
 import de.skash.movielist.databinding.ListItemPersonBinding
 
-class PersonListAdapter : PagingDataAdapter<Person, PersonViewHolder>(PersonDiffUtil()) {
+class PersonListAdapter(private val onPersonClicked: (Person) -> Unit) :
+    PagingDataAdapter<Person, PersonViewHolder>(PersonDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -21,11 +23,15 @@ class PersonListAdapter : PagingDataAdapter<Person, PersonViewHolder>(PersonDiff
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
         val person = getItem(position) ?: return
         holder.bind(person)
+
+        holder.binding.cardView.setOnClickListener {
+            onPersonClicked(person)
+        }
     }
 }
 
 class PersonViewHolder(
-    private val binding: ListItemPersonBinding
+    val binding: ListItemPersonBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(person: Person) {

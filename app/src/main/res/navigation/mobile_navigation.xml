@@ -19,7 +19,11 @@
         android:id="@+id/navigation_people"
         android:name="de.skash.movielist.feature.people.PeopleFragment"
         android:label="@string/title_people"
-        tools:layout="@layout/fragment_people" />
+        tools:layout="@layout/fragment_people" >
+        <action
+            android:id="@+id/action_navigation_people_to_detailedPersonFragment"
+            app:destination="@id/navigation_person_detailed" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_tv_shows"
@@ -32,6 +36,15 @@
         android:label="DetailedMovieFragment" >
         <argument
             android:name="movieId"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_person_detailed"
+        android:name="de.skash.movielist.feature.people.detail.DetailedPersonFragment"
+        android:label="DetailedPersonFragment" >
+        <argument
+            android:name="personId"
             app:argType="integer"
             android:defaultValue="0" />
     </fragment>
