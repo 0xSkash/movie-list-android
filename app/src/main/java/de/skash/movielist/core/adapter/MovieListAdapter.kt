@@ -31,6 +31,7 @@ class MovieViewHolder(
     fun bind(movie: Movie) {
         binding.movieTitleTextView.text = movie.title
         binding.movieOverviewTextView.text = movie.overview
+        binding.movieReleaseDateTextView.text = movie.releaseDate
         Glide.with(binding.movieImageView)
             .load(movie.imageURL)
             .placeholder(R.drawable.placeholder)

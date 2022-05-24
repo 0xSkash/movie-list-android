@@ -31,6 +31,7 @@ class TvShowViewHolder(
     fun bind(tvShow: TvShow) {
         binding.tvShowNameTextView.text = tvShow.name
         binding.tvShowOverviewTextView.text = tvShow.overview
+        binding.tvShowFirstAirDateTextView.text = tvShow.firstAirDate
         Glide.with(binding.tvShowImageView)
             .load(tvShow.imageURL)
             .placeholder(R.drawable.placeholder)

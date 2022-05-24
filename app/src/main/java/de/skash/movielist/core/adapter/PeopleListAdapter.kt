@@ -30,7 +30,9 @@ class PersonViewHolder(
 
     fun bind(person: Person) {
         binding.personNameTextView.text = person.name
-        binding.personBiographyTextView.text = ""
+        binding.personKnownForTextView.text = person.knownFor.joinToString {
+            it
+        }
         Glide.with(binding.personImageView)
             .load(person.imageURL)
             .placeholder(R.drawable.placeholder)

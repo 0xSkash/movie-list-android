@@ -1,6 +1,6 @@
 package de.skash.movielist.core.network.model
 
-data class KnownFor(
+data class ApiKnownFor(
     val adult: Boolean,
     val backdrop_path: String,
     val first_air_date: String,
