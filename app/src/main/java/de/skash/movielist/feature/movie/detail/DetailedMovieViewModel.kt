@@ -1,22 +1,28 @@
+
 package de.skash.movielist.feature.movie.detail
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.rxjava3.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.skash.movielist.core.model.DetailedMovie
 import de.skash.movielist.core.model.Movie
 import de.skash.movielist.core.repository.MovieRepository
 import de.skash.movielist.core.util.Result
+import de.skash.movielist.core.util.SingleLiveEvent
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subjects.PublishSubject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DetailedMovieViewModel @Inject constructor(
     private val movieRepository: MovieRepository
@@ -32,6 +38,11 @@ class DetailedMovieViewModel @Inject constructor(
     private val _recommendedMoviesLivedata = MutableLiveData<PagingData<Movie>>()
     val recommendedMoviesLivedata: LiveData<PagingData<Movie>> get() = _recommendedMoviesLivedata
 
+    private val movieClickSubject: PublishSubject<Int> = PublishSubject.create()
+    private val movieClickStream: Observable<Int> = movieClickSubject.hide()
+    private val _movieClickLiveData = SingleLiveEvent<Int>()
+    val movieClickLiveData: LiveData<Int> get() = _movieClickLiveData
+
     private val subscriptions = CompositeDisposable()
 
     init {
@@ -42,7 +53,13 @@ class DetailedMovieViewModel @Inject constructor(
         recommendedMoviesStream
             .subscribe(_recommendedMoviesLivedata::postValue)
             .addTo(subscriptions)
+
+        movieClickStream
+            .subscribe(_movieClickLiveData::postValue)
+            .addTo(subscriptions)
     }
+
+    fun onMovieClicked(movieId: Int) = movieClickSubject.onNext(movieId)
 
     fun fetchDetailedMovieForId(id: Int) {
         movieRepository.fetchDetailedMovieForId(id)
@@ -58,6 +75,7 @@ class DetailedMovieViewModel @Inject constructor(
 
     fun fetchRecommendationsForId(id: Int) {
         movieRepository.fetchRecommendationsForMovie(id)
+            .cachedIn(viewModelScope)
             .subscribeBy(
                 onNext = {
                     recommendedMoviesSubject.onNext(it)

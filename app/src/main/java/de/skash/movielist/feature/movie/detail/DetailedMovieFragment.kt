@@ -30,7 +30,7 @@ class DetailedMovieFragment : Fragment() {
     private val viewModel: DetailedMovieViewModel by viewModels()
 
     private val movieListAdapter = SmallMovieListAdapter(onMovieClicked = {
-
+        viewModel.onMovieClicked(it.id)
     })
 
     override fun onCreateView(
@@ -61,6 +61,11 @@ class DetailedMovieFragment : Fragment() {
 
         viewModel.recommendedMoviesLivedata.observe(viewLifecycleOwner) { pagingData ->
             movieListAdapter.submitData(lifecycle, pagingData)
+        }
+
+        viewModel.movieClickLiveData.observe(viewLifecycleOwner) { movieId ->
+            val navAction = DetailedMovieFragmentDirections.actionNavigationMovieDetailedToNavigationDetailedMovie(movieId)
+            findNavController().navigate(navAction)
         }
     }
 

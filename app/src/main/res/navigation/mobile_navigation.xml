@@ -42,6 +42,10 @@
             android:name="movieId"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_navigation_movie_detailed_to_navigation_detailed_movie"
+            app:destination="@id/navigation_detailed_movie" />
+
     </fragment>
     <fragment
         android:id="@+id/navigation_person_detailed"
