@@ -22,3 +22,11 @@ fun Throwable.getErrorType(): ErrorType? {
         else -> null
     }
 }
+
+fun Int.toStringWithDefaultValue(): String {
+    return if (this == 0) {
+        "-"
+    } else {
+        toString()
+    }
+}

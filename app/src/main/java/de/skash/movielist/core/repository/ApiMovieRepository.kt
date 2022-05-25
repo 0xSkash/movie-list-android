@@ -8,6 +8,7 @@ import de.skash.movielist.core.model.DetailedMovie
 import de.skash.movielist.core.model.Movie
 import de.skash.movielist.core.network.api.MovieApi
 import de.skash.movielist.core.util.ErrorType
+import de.skash.movielist.core.util.FilterType
 import de.skash.movielist.core.util.Result
 import de.skash.movielist.core.util.getErrorType
 import de.skash.movielist.core.util.paging.MoviePagingSource
@@ -19,7 +20,7 @@ class ApiMovieRepository @Inject constructor(
     private val movieApi: MovieApi
 ) : MovieRepository {
 
-    override fun fetchMoviesForFilterType(type: Movie.FilterType): Observable<PagingData<Movie>> {
+    override fun fetchMoviesForFilterType(type: FilterType): Observable<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20
@@ -41,5 +42,15 @@ class ApiMovieRepository @Inject constructor(
             .onErrorReturn {
                 Result.Error(it.getErrorType() ?: ErrorType.MovieNotFound)
             }
+    }
+
+    override fun fetchRecommendationsForMovie(movieId: Int): Observable<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20
+            ),
+            pagingSourceFactory = {
+                MoviePagingSource(movieApi, FilterType.Recommendations(movieId))
+            }).observable
     }
 }

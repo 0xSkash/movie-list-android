@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.skash.movielist.core.model.DetailedMovie
+import de.skash.movielist.core.model.Movie
 import de.skash.movielist.core.repository.MovieRepository
 import de.skash.movielist.core.util.Result
 import io.reactivex.rxjava3.core.Observable
@@ -25,11 +27,20 @@ class DetailedMovieViewModel @Inject constructor(
     private val _movieLivedata = MutableLiveData<Result<DetailedMovie>>()
     val movieLivedata: LiveData<Result<DetailedMovie>> get() = _movieLivedata
 
+    private val recommendedMoviesSubject: PublishSubject<PagingData<Movie>> = PublishSubject.create()
+    private val recommendedMoviesStream: Observable<PagingData<Movie>> = recommendedMoviesSubject.hide()
+    private val _recommendedMoviesLivedata = MutableLiveData<PagingData<Movie>>()
+    val recommendedMoviesLivedata: LiveData<PagingData<Movie>> get() = _recommendedMoviesLivedata
+
     private val subscriptions = CompositeDisposable()
 
     init {
         movieStream
             .subscribe(_movieLivedata::postValue)
+            .addTo(subscriptions)
+
+        recommendedMoviesStream
+            .subscribe(_recommendedMoviesLivedata::postValue)
             .addTo(subscriptions)
     }
 
@@ -41,6 +52,18 @@ class DetailedMovieViewModel @Inject constructor(
                 },
                 onError = {
                     Log.d(javaClass.name, "Failed to fetch detailed movie for id: $id :: ", it)
+                }
+            ).addTo(subscriptions)
+    }
+
+    fun fetchRecommendationsForId(id: Int) {
+        movieRepository.fetchRecommendationsForMovie(id)
+            .subscribeBy(
+                onNext = {
+                    recommendedMoviesSubject.onNext(it)
+                },
+                onError = {
+                    Log.d(javaClass.name, "Failed to fetch recommended movies for movie with id: $id :: ", it)
                 }
             ).addTo(subscriptions)
     }

@@ -10,6 +10,7 @@ import androidx.paging.rxjava3.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.skash.movielist.core.model.Movie
 import de.skash.movielist.core.repository.MovieRepository
+import de.skash.movielist.core.util.FilterType
 import de.skash.movielist.core.util.SingleLiveEvent
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -53,7 +54,7 @@ class TrendingMoviesViewModel @Inject constructor(
 
     private fun retrievePopularMovies() {
         movieRepository.fetchMoviesForFilterType(
-            Movie.FilterType.TRENDING
+            FilterType.Trending
         )
             .cachedIn(viewModelScope)
             .subscribeBy(

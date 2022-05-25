@@ -4,6 +4,7 @@ import androidx.paging.PagingState
 import androidx.paging.rxjava3.RxPagingSource
 import de.skash.movielist.core.model.Movie
 import de.skash.movielist.core.network.api.MovieApi
+import de.skash.movielist.core.util.FilterType
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -11,7 +12,7 @@ private const val PAGING_STARTING_PAGE_INDEX = 1
 
 class MoviePagingSource(
     private val movieApi: MovieApi,
-    private val filterType: Movie.FilterType
+    private val filterType: FilterType
 ) : RxPagingSource<Int, Movie>() {
 
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
@@ -22,13 +23,16 @@ class MoviePagingSource(
         val position = params.key ?: PAGING_STARTING_PAGE_INDEX
 
         return when (filterType) {
-            Movie.FilterType.POPULAR -> {
+            FilterType.Popular -> {
                 movieApi.getPopularMovies(position, params.loadSize)
             }
-            Movie.FilterType.TRENDING -> {
+            is FilterType.Recommendations -> {
+                movieApi.getMovieRecommendations(filterType.movieId, position, params.loadSize)
+            }
+            FilterType.Trending -> {
                 movieApi.getTrendingMovies(position, params.loadSize)
             }
-            Movie.FilterType.UPCOMING -> {
+            FilterType.Upcoming -> {
                 movieApi.getUpcomingMovies(position, params.loadSize)
             }
         }

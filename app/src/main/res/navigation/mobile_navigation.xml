@@ -37,7 +37,7 @@
     <fragment
         android:id="@+id/navigation_detailed_movie"
         android:name="de.skash.movielist.feature.movie.detail.DetailedMovieFragment"
-        android:label="DetailedMovieFragment" >
+        android:label="Detailed Infos" >
         <argument
             android:name="movieId"
             app:argType="integer"

@@ -9,6 +9,16 @@
     <string name="title_trending_movies">Trending</string>
     <string name="title_popular_movies">Popular</string>
 
+    <!-- Detailed Movie -->
+    <string name="movie_overview_headline">Overview</string>
+    <string name="movie_status_headline">Status</string>
+    <string name="movie_original_language_headline">Original Language</string>
+    <string name="movie_budget_headline">Budget</string>
+    <string name="movie_revenue_headline">Revenue</string>
+    <string name="movie_recommendations_headline">Recommendations</string>
+    <string name="movie_image_content_description">Image of the Movie</string>
+    <string name="movie_recommendations_placeholder">-</string>
+
     <!-- Error Types -->
     <string name="error_alert_title">Error</string>
     <string name="error_type_no_internet">Please make sure you are connected to the internet!</string>

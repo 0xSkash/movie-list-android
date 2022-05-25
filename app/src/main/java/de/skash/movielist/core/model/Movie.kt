@@ -10,12 +10,6 @@ data class Movie(
     val imageURL: String,
     val releaseDate: String
 ) {
-    enum class FilterType {
-        POPULAR,
-        TRENDING,
-        UPCOMING
-    }
-
     constructor(apiModel: ApiMovie) : this(
         id = apiModel.id,
         title = apiModel.title,

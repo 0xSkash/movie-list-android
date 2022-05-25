@@ -32,5 +32,10 @@ interface MovieApi {
         @Path("movieId") movieId: Int
     ): Observable<ApiDetailedMovie>
 
-
+    @GET("movie/{movieId}/recommendations")
+    fun getMovieRecommendations(
+        @Path("movieId") movieId: Int,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Single<ApiMovieList>
 }
