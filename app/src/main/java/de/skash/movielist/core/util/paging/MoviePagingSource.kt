@@ -29,6 +29,9 @@ class MoviePagingSource(
             is FilterType.Recommendations -> {
                 movieApi.getMovieRecommendations(filterType.movieId, position, params.loadSize)
             }
+            is FilterType.Similar -> {
+                movieApi.getSimilarMovies(filterType.movieId, position, params.loadSize)
+            }
             FilterType.Trending -> {
                 movieApi.getTrendingMovies(position, params.loadSize)
             }

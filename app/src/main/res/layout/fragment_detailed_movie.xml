@@ -172,5 +172,28 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/recommendations_headline_text_view" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/similar_movies_headline_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:maxLines="1"
+            android:text="@string/movie_similar_movies_headline"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/movie_title_text_view"
+            app:layout_constraintStart_toStartOf="@id/movie_title_text_view"
+            app:layout_constraintTop_toBottomOf="@id/recommended_movies_recycler_view" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/similar_movies_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/similar_movies_headline_text_view" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

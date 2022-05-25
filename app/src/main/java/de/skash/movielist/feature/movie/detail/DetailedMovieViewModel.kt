@@ -38,6 +38,11 @@ class DetailedMovieViewModel @Inject constructor(
     private val _recommendedMoviesLivedata = MutableLiveData<PagingData<Movie>>()
     val recommendedMoviesLivedata: LiveData<PagingData<Movie>> get() = _recommendedMoviesLivedata
 
+    private val similarMoviesSubject: PublishSubject<PagingData<Movie>> = PublishSubject.create()
+    private val similarMoviesStream: Observable<PagingData<Movie>> = similarMoviesSubject.hide()
+    private val _similarMoviesLivedata = MutableLiveData<PagingData<Movie>>()
+    val similarMoviesLivedata: LiveData<PagingData<Movie>> get() = _similarMoviesLivedata
+
     private val movieClickSubject: PublishSubject<Int> = PublishSubject.create()
     private val movieClickStream: Observable<Int> = movieClickSubject.hide()
     private val _movieClickLiveData = SingleLiveEvent<Int>()
@@ -52,6 +57,10 @@ class DetailedMovieViewModel @Inject constructor(
 
         recommendedMoviesStream
             .subscribe(_recommendedMoviesLivedata::postValue)
+            .addTo(subscriptions)
+
+        similarMoviesStream
+            .subscribe(_similarMoviesLivedata::postValue)
             .addTo(subscriptions)
 
         movieClickStream
@@ -86,6 +95,18 @@ class DetailedMovieViewModel @Inject constructor(
             ).addTo(subscriptions)
     }
 
+    fun fetchSimilarMoviesForId(id: Int) {
+        movieRepository.fetchSimilarMovies(id)
+            .cachedIn(viewModelScope)
+            .subscribeBy(
+                onNext = {
+                    similarMoviesSubject.onNext(it)
+                },
+                onError = {
+                    Log.d(javaClass.name, "Failed to fetch similar movies for movie with id: $id :: ", it)
+                }
+            ).addTo(subscriptions)
+    }
     override fun onCleared() {
         super.onCleared()
         subscriptions.clear()

@@ -53,4 +53,14 @@ class ApiMovieRepository @Inject constructor(
                 MoviePagingSource(movieApi, FilterType.Recommendations(movieId))
             }).observable
     }
+
+    override fun fetchSimilarMovies(movieId: Int): Observable<PagingData<Movie>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20
+            ),
+            pagingSourceFactory = {
+                MoviePagingSource(movieApi, FilterType.Similar(movieId))
+            }).observable
+    }
 }

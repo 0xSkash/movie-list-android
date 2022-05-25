@@ -29,7 +29,10 @@ class DetailedMovieFragment : Fragment() {
 
     private val viewModel: DetailedMovieViewModel by viewModels()
 
-    private val movieListAdapter = SmallMovieListAdapter(onMovieClicked = {
+    private val recommendedMovieListAdapter = SmallMovieListAdapter(onMovieClicked = {
+        viewModel.onMovieClicked(it.id)
+    })
+    private val similarMoviesListAdapter = SmallMovieListAdapter(onMovieClicked = {
         viewModel.onMovieClicked(it.id)
     })
 
@@ -47,7 +50,9 @@ class DetailedMovieFragment : Fragment() {
         _binding = FragmentDetailedMovieBinding.bind(view)
         viewModel.fetchDetailedMovieForId(args.movieId)
         viewModel.fetchRecommendationsForId(args.movieId)
-        binding.recommendedMoviesRecyclerView.adapter = movieListAdapter
+        viewModel.fetchSimilarMoviesForId(args.movieId)
+        binding.recommendedMoviesRecyclerView.adapter = recommendedMovieListAdapter
+        binding.similarMoviesRecyclerView.adapter = similarMoviesListAdapter
 
         viewModel.movieLivedata.observe(viewLifecycleOwner) { result ->
             when (result) {
@@ -60,11 +65,16 @@ class DetailedMovieFragment : Fragment() {
         }
 
         viewModel.recommendedMoviesLivedata.observe(viewLifecycleOwner) { pagingData ->
-            movieListAdapter.submitData(lifecycle, pagingData)
+            recommendedMovieListAdapter.submitData(lifecycle, pagingData)
+        }
+
+        viewModel.similarMoviesLivedata.observe(viewLifecycleOwner) { pagingData ->
+            similarMoviesListAdapter.submitData(lifecycle, pagingData)
         }
 
         viewModel.movieClickLiveData.observe(viewLifecycleOwner) { movieId ->
-            val navAction = DetailedMovieFragmentDirections.actionNavigationMovieDetailedToNavigationDetailedMovie(movieId)
+            val navAction = DetailedMovieFragmentDirections
+                .actionNavigationMovieDetailedToNavigationDetailedMovie(movieId)
             findNavController().navigate(navAction)
         }
     }

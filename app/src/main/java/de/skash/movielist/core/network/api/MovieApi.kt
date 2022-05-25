@@ -38,4 +38,11 @@ interface MovieApi {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int
     ): Single<ApiMovieList>
+
+    @GET("movie/{movieId}/similar")
+    fun getSimilarMovies(
+        @Path("movieId") movieId: Int,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Single<ApiMovieList>
 }

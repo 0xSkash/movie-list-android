@@ -16,6 +16,7 @@
     <string name="movie_budget_headline">Budget</string>
     <string name="movie_revenue_headline">Revenue</string>
     <string name="movie_recommendations_headline">Recommendations</string>
+    <string name="movie_similar_movies_headline">Similar Movies</string>
     <string name="movie_image_content_description">Image of the Movie</string>
     <string name="movie_recommendations_placeholder">-</string>
 

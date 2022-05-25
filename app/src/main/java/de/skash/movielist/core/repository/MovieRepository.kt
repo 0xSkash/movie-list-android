@@ -12,4 +12,5 @@ interface MovieRepository {
     fun fetchMoviesForFilterType(type: FilterType): Observable<PagingData<Movie>>
     fun fetchDetailedMovieForId(id: Int): Observable<Result<DetailedMovie>>
     fun fetchRecommendationsForMovie(movieId: Int): Observable<PagingData<Movie>>
+    fun fetchSimilarMovies(movieId: Int): Observable<PagingData<Movie>>
 }
